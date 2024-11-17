@@ -170,7 +170,7 @@ class BigramLanguageModel(nn.Module):
         B, T = idx.shape
 
         # idx and targets are both (B,T) tensor of integers
-        tok_emb = self.token_embedding_table(idx) # (B,T,C) - Batch, Time/Step, Channel (n_emb)
+        tok_emb = self.token_embedding_table(idx) # (B,T,C) - Batch, Time/Step/Token, Channel (n_emb)
         pos_emb = self.position_embedding_table(torch.arange(T, device=device)) # (T, C) -> 0 until T-1 positions
         x = tok_emb + pos_emb # (B, T, C)
         # x = self.sa_heads(x)
@@ -193,7 +193,7 @@ class BigramLanguageModel(nn.Module):
         for _ in range(max_new_tokens):
             # crop idx (contexts) to the last block_size tokens - to avoid running out of scope in the position embeddings
             idx_cond = idx[:, -block_size:]
-            # get the predictions
+            # get the predictions through forward() pass
             logits, loss = self(idx_cond)
             # focus only on the last time step
             logits = logits[:, -1, :] # becomes (B, C)

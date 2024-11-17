@@ -67,7 +67,7 @@ class BigramLanguageModel(nn.Module):
     def generate(self, idx, max_new_tokens):
         # idx is (B, T) array of indices in the current context
         for _ in range(max_new_tokens):
-            # get the predictions
+            # get the predictions through forward() pass
             logits, loss = self(idx)
             # focus only on the last time step
             logits = logits[:, -1, :] # becomes (B, C)
